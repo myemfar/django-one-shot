@@ -4,10 +4,10 @@ from todos.forms import TodoForm, TodoItemForm
 
 
 # Create your views here.
-def todo_list(request):
+def todo_list_list(request):
     todos = TodoList.objects.all()
     context = {
-        "todo_list": todos,
+        "todo_list_list": todos,
     }
     return render(request, "todos/list.html", context)
 
@@ -20,12 +20,13 @@ def todo_list_detail(request, id):
     return render(request, "todos/detail.html", context)
 
 
-def create_todo_list(request):
+def todo_list_create(request):
     if request.method == "POST":
         form = TodoForm(request.POST)
         if form.is_valid():
+            form = form.save(commit=False)
             form.save()
-            return redirect("todo_list")
+            return redirect("todo_list_detail", id=form.id)
     else:
         form = TodoForm()
     context = {
@@ -54,7 +55,7 @@ def todo_list_delete(request, id):
     model_instance = TodoList.objects.get(id=id)
     if request.method == "POST":
         model_instance.delete()
-        return redirect("todo_list")
+        return redirect("todo_list_list")
     return render(request, "todos/delete.html")
 
 
