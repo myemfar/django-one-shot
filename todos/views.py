@@ -48,3 +48,11 @@ def todo_list_update(request, id):
         "object": post,
     }
     return render(request, "todos/edit.html", context)
+
+
+def todo_list_delete(request, id):
+    model_instance = TodoList.objects.get(id=id)
+    if request.method == "POST":
+        model_instance.delete()
+        return redirect("todo_list")
+    return render(request, "todos/delete.html")
