@@ -58,22 +58,6 @@ def todo_list_delete(request, id):
     return render(request, "todos/delete.html")
 
 
-# def todo_list_update(request, id):
-#     post = get_object_or_404(TodoList, id=id)
-#     if request.method == "POST":
-#         form = TodoForm(request.POST, instance=post)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("todo_list_detail", id=id)
-#     else:
-#         form = TodoForm(instance=post)
-#     context = {
-#         "form": form,
-#         "object": post,
-#     }
-#     return render(request, "todos/edit.html", context)
-
-
 def todo_item_create(request):
     if request.method == "POST":
         form = TodoItemForm(request.POST)
@@ -87,3 +71,20 @@ def todo_item_create(request):
         "form": form,
     }
     return render(request, "todos/itemcreate.html", context)
+
+
+def todo_item_update(request, id):
+    post = get_object_or_404(TodoItem, id=id)
+    if request.method == "POST":
+        form = TodoItemForm(request.POST, instance=post)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.save()
+            return redirect("todo_list_detail", id=form.list.id)
+    else:
+        form = TodoItemForm(instance=post)
+    context = {
+        "form": form,
+        "object": post,
+    }
+    return render(request, "todos/edititem.html", context)
